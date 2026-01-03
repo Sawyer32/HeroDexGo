@@ -25,6 +25,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         extensions: const <ThemeExtension<dynamic>>[
           ThemeColors(primaryColor: Color(0xFF7F0DF2), backgroundColor: Color(0xFFF7F5F8))

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_bloc.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_event.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_state.dart';
+import 'package:hero_dex_go/screens/onboarding/pages/analytics_page.dart';
 import 'package:hero_dex_go/screens/onboarding/pages/info_page.dart';
 import 'package:hero_dex_go/theme/theme_colors.dart';
 
@@ -37,7 +38,7 @@ class OnboardingScreen extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     children: [
                       // Page 1: Info
-                      InfoPage(context: context),
+                      AnalyticsPage(context: context),
                       // Page 2: Analytics
                       
                       // Page 3: GPS
