@@ -38,18 +38,10 @@ class AnalyticsPage extends StatelessWidget {
                   Text("Your Privacy Matters", style: TextStyle(fontSize: 32, fontWeight: .bold)),
                   SizedBox(height: 20),
                   Text("Help us make the ultimate hero database. We use anonymous analytics and crash reporting to fix bugs faster. We never collect personal data without your permission.", textAlign: .center,),
-                  SizedBox(height: 20),
-                  Text(
-                    "Discover thousands of supersheroes. Analyze their stats, alignment, and origins. Your journey to becoming the ultimate archivist starts here.",
-                    textAlign: .center,
-                    style: TextStyle(
-                      fontSize: 15
-                    ),
-                  ),
                 ],
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 36),
             Padding(
               padding: .directional(start: 10, end: 10),
               child: Column(
