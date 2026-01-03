@@ -5,131 +5,120 @@ import 'package:hero_dex_go/bloc/onboarding/onboarding_event.dart';
 import 'package:hero_dex_go/theme/theme_colors.dart';
 
 class GpsPage extends StatelessWidget {
-  const GpsPage({super.key, required this.context});
-
-  final BuildContext context;
+  // 1. Tog bort 'context' från constructorn
+  const GpsPage({super.key}); 
 
   @override
   Widget build(BuildContext context) {
-    final ThemeColors _themeColors = Theme.of(context).extension<ThemeColors>()!;
+    // 2. Flyttade Theme-hämtingen in hit där den hör hemma
+    final ThemeColors? themeColors = Theme.of(context).extension<ThemeColors>();
+    
+    // Fallback om theme extension saknas (för att undvika krasch)
+    final Color bgColor = themeColors?.backgroundColor ?? Colors.white;
+    final Color primaryColor = themeColors?.primaryColor ?? Colors.blue;
 
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
-          color: _themeColors.backgroundColor
+          color: bgColor,
         ),
         child: Column(
-          mainAxisAlignment: .start,
-          crossAxisAlignment: .stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: .directional(start: 10, end: 10), 
+              // 3. Rättade padding-syntaxen (standard Flutter)
+              padding: const EdgeInsetsDirectional.only(start: 10, end: 10), 
               child: Image(
                 image: AssetImage('assets/images/LoginImage.png'),
                 height: 200,
-                fit: .cover,
+                fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Padding(
-              padding: .directional(start: 10, end: 10),
+              padding: const EdgeInsetsDirectional.only(start: 10, end: 10),
               child: Column(
                 children: [
-                  Text("Scout Your", style: TextStyle(fontSize: 32, fontWeight: .bold)),
-                  Text("Surroundings", style: TextStyle(fontSize: 32, fontWeight: .bold, color: _themeColors.primaryColor), textAlign: .center,),
-                  SizedBox(height: 20),
+                  const Text("Scout Your", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                   Text(
+                    "Surroundings", 
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: primaryColor), 
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
                     "To find heroes and villains hiding in your city, we need access to your location. "
                     "This lets you participate in location-based activites.",
-                    textAlign: .center,
+                    textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 20),
                   
-                   Column(
-                      spacing: 20,
-                      children: [
-                        Container(
-                            decoration: BoxDecoration(
-                            border: .all(width: 1),
-                            borderRadius: .all(.circular(10))
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.radar_rounded,
-                                size: 24.0,
-                                color: _themeColors.primaryColor,
-                                semanticLabel: 'Radar icon',
-                              ),
-                              Flexible(
-                                flex: 1,
-                                child: Column(
-                                  children: [
-                                    Text("Spot nearby villains", textAlign: .left),
-                                    Text("See who is lurking around your neighborhood in real-time.")
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                            decoration: BoxDecoration(
-                            border: .all(width: 1),
-                            borderRadius: .all(.circular(10))
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.people_alt_rounded,
-                                color: _themeColors.primaryColor,
-                                size: 24.0,
-                                semanticLabel: 'Radar icon',
-                              ),
-                              Flexible(
-                                flex: 1,
-                                child: Column(
-                                  children: [
-                                    Text("Spot nearby villains", textAlign: .left),
-                                    Text("See who is lurking around your neighborhood in real-time.")
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  // Dina info-boxar (förenklad layout för läsbarhet)
+                  _buildInfoBox(Icons.radar_rounded, "Spot nearby villains", "See who is lurking...", primaryColor),
+                  const SizedBox(height: 10),
+                  _buildInfoBox(Icons.people_alt_rounded, "Join forces", "Find other heroes...", primaryColor),
                 ],
               ),
             ),
-            SizedBox(height: 36),
+            const SizedBox(height: 36),
             Padding(
-              padding: .directional(start: 10, end: 10),
+              padding: const EdgeInsetsDirectional.only(start: 10, end: 10),
               child: Column(
-                crossAxisAlignment: .stretch,
-                spacing: 20,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                // spacing: 20, // (Kräver nyaste Flutter versionen, använd SizedBox om det klagar)
                 children: [
-                  FloatingActionButton(
-                    backgroundColor: _themeColors.primaryColor,
-                    onPressed: () => {
-                      context.read<OnboardingBloc>().add(OnboardingRequestLocation()),
+                  FloatingActionButton.extended(
+                    heroTag: "btn_enable_location", // 4. VIKTIGT: Unik tagg
+                    backgroundColor: primaryColor,
+                    onPressed: () {
+                      context.read<OnboardingBloc>().add(OnboardingRequestLocation());
                     },
-                    child: Text("Enable Location Services", style: TextStyle(color: Colors.white),),
+                    label: const Text("Enable Location Services", style: TextStyle(color: Colors.white)),
                   ),
-                  FloatingActionButton(
+                  const SizedBox(height: 20),
+                  FloatingActionButton.extended(
+                    heroTag: "btn_maybe_later", // 4. VIKTIGT: Unik tagg
                     backgroundColor: Colors.black45,
-                    onPressed: () => {
-                      context.read<OnboardingBloc>().add(OnboardingCompleted())
+                    onPressed: () {
+                      // 5. Korrekt syntax med måsvingar för blocket
+                      context.read<OnboardingBloc>().add(OnboardingCompleted());
                     },
-                    child: Text("Maybe Later", style: TextStyle(color: Colors.white),),
+                    label: const Text("Maybe Later", style: TextStyle(color: Colors.white)),
                   ),
                 ],
-              )
+              ),
             ),
-            SizedBox(height: 10),
-            Text("Read our full Privacy Policy", textAlign: .center),
-          ]
+            const SizedBox(height: 10),
+            const Text("Read our full Privacy Policy", textAlign: TextAlign.center),
+          ],
         ),
+      ),
+    );
+  }
+
+  // Hjälpmetod för att städa upp koden lite
+  Widget _buildInfoBox(IconData icon, String title, String subtitle, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(width: 1),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 24.0, color: color),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(subtitle),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

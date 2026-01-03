@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_bloc.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_event.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_state.dart';
@@ -27,7 +28,7 @@ class OnboardingScreen extends StatelessWidget {
 
             // If onboarding is completed
             if (state.isCompleted) {
-              Navigator.of(context).pushReplacementNamed('/home');
+              context.go('/login');
             }
           },
           builder: (context, state) {
@@ -43,7 +44,7 @@ class OnboardingScreen extends StatelessWidget {
                       // Page 2: Analytics
                       AnalyticsPage(context: context),
                       // Page 3: GPS
-                      GpsPage(context: context)
+                      GpsPage()
                     ]
                   )
                 )

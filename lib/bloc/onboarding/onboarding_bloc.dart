@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_event.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_state.dart';
@@ -38,8 +39,11 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     on<OnboardingCompleted>((event, emit) {
       // TODO: Save to SharedPreferences
       // await prefs.setBool('seenOnboarding', true);
-
-      emit(state.copyWith(isCompleted: true));
+      try {
+        emit(state.copyWith(isCompleted: true));
+      } catch (er) {
+        debugPrint("Something went wrong: $er");
+      }
     });
   }
 }
