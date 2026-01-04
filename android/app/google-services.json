@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "342462384194",
+    "project_id": "herodex-go",
+    "storage_bucket": "herodex-go.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342462384194:android:7e2fbcac7b1c7f73e905db",
+        "android_client_info": {
+          "package_name": "com.example.hero_dex_go"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxuwk7GtVwsLxPbXJsy-6zdp6dXFlApL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
