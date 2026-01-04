@@ -81,7 +81,7 @@ class _LoginForm extends StatelessWidget {
             );
           }
           if (state.status == LoginStatus.success) {
-            context.go('/home');
+            context.go('/search');
           }
         },
         child: Padding(
@@ -99,6 +99,7 @@ class _LoginForm extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                     ),
+                    
                     decoration: InputDecoration(
                       labelText: 'Email',
                       errorText: state.status == LoginStatus.failure ? 'Check your email' : null,

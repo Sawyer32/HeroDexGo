@@ -7,6 +7,8 @@ import 'package:hero_dex_go/firebase_options.dart';
 import 'package:hero_dex_go/repositories/auth_repository.dart';
 import 'package:hero_dex_go/screens/auth/login_sreen.dart';
 import 'package:hero_dex_go/screens/auth/register_screen.dart';
+import 'package:hero_dex_go/screens/search/search_screen.dart';
+import 'package:hero_dex_go/screens/main_wrapper.dart';
 import 'package:hero_dex_go/screens/onboarding/onboarding.dart';
 import 'package:hero_dex_go/theme/theme_colors.dart';
 
@@ -20,7 +22,11 @@ void main() async {
   runApp(const MyApp());
 }
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _sectionNavigatorKey = GlobalKey<NavigatorState>();
+
 final GoRouter _router = GoRouter(
+  initialLocation: '/',
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -35,16 +41,44 @@ final GoRouter _router = GoRouter(
       }
     ),
     GoRoute(
-      path: '/home',
-      builder: (BuildContext context, GoRouterState state) {
-        return Placeholder();
-      }
-    ),
-    GoRoute(
       path: '/register',
       builder: (BuildContext context, GoRouterState state) {
         return RegisterScreen();
       }
+    ),
+
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return MainWrapper(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/collection',
+              builder: (context, state) => const Placeholder() // TODO: Build collection page
+            ),
+          ],
+        ),
+
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/search',
+              builder: (context, state) => const SearchScreen()
+            ),
+          ],
+        ),
+        
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/profile',
+              builder: (context, state) => const Placeholder() // TODO: Build profile page
+            ),
+          ],
+        ),
+      ]
     )
   ]
 );
