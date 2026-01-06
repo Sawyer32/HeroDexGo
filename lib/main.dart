@@ -13,6 +13,7 @@ import 'package:hero_dex_go/screens/main_wrapper.dart';
 import 'package:hero_dex_go/screens/onboarding/onboarding.dart';
 import 'package:hero_dex_go/services/api_client.dart';
 import 'package:hero_dex_go/theme/theme_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,12 +22,14 @@ void main() async {
   );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  final prefs = await SharedPreferences.getInstance();
+
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider<ApiClient>(create: (context) => ApiClient()),
         RepositoryProvider<AuthRepository>(create:(context) => AuthRepository()),
-        RepositoryProvider<SearchRepository>(create:(context) => SearchRepository(apiClient: context.read<ApiClient>()),),
+        RepositoryProvider<SearchRepository>(create:(context) => SearchRepository(apiClient: context.read<ApiClient>(), prefs: prefs),),
       ],
       child: const MyApp(),
     ),

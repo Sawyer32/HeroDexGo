@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide FilterChip;
 import 'package:hero_dex_go/components/discovery/filter_chip.dart';
+import 'package:hero_dex_go/components/discovery/recent_searches.dart';
 import 'package:hero_dex_go/components/discovery/trending_card.dart';
 
 Widget buildDiscoverView(BuildContext context) {
@@ -41,7 +42,8 @@ Widget buildDiscoverView(BuildContext context) {
               TrendingCard(name: "Dr. Dread", type: "Villain", level: "10", topPick: false,),
             ],
           )
-        )
+        ),
+        RecentSearches(),
       ],
     )
   );
