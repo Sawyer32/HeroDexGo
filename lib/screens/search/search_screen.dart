@@ -24,33 +24,35 @@ class _SearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: .all(16),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              const Text(
-                "Discover",
-                style: TextStyle(fontSize: 32, fontWeight: .bold, color: Colors.grey)
-              ),
-              const SizedBox(height: 16),
-
-              _buildSearchBar(context),
-              SizedBox(height: 16),
-              Expanded(
-                child: BlocBuilder<SearchBloc, SearchState>(
-                  builder: (context, state) {
-                    if (state.status == SearchStatus.loading ||
-                      state.status == SearchStatus.success ||
-                      (state.status == SearchStatus.initial && state.results.isNotEmpty)) {
-                        return _buildSearchResults(state);
-                    }
-
-                    return buildDiscoverView(context);
-                  },
+        body: SafeArea(
+          child: Padding(
+            padding: .all(16),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                const Text(
+                  "Discover",
+                  style: TextStyle(fontSize: 32, fontWeight: .bold, color: Colors.white)
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+          
+                _buildSearchBar(context),
+                SizedBox(height: 16),
+                Expanded(
+                  child: BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      if (state.status == SearchStatus.loading ||
+                        state.status == SearchStatus.success ||
+                        (state.status == SearchStatus.initial && state.results.isNotEmpty)) {
+                          return _buildSearchResults(state);
+                      }
+          
+                      return buildDiscoverView(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         )
       );

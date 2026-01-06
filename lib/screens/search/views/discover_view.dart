@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide FilterChip;
 import 'package:hero_dex_go/components/discovery/filter_chip.dart';
+import 'package:hero_dex_go/components/discovery/trending_card.dart';
 
 Widget buildDiscoverView(BuildContext context) {
   return SingleChildScrollView(
@@ -18,10 +19,27 @@ Widget buildDiscoverView(BuildContext context) {
           )
         ),
         SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: .spaceBetween,
+          children: [
+            Text("Trending", style: TextStyle(color: Colors.white, fontWeight: .bold, fontSize: 32)),
+            TextButton(
+              child: Text("View all"),
+              onPressed: () => {},
+            )
+          ],
+        ),
         SingleChildScrollView(
           scrollDirection: .horizontal,
           child: Row(
-            // TODO: Trending Hero Card
+            spacing: 15,
+            children: [
+              TrendingCard(name: "Dr. Dread", type: "Villain", level: "10", topPick: false,),
+              TrendingCard(name: "Dr. Dread", type: "Villain", level: "10", topPick: false,),
+              TrendingCard(name: "Dr. Dread", type: "Villain", level: "10", topPick: true,),
+              TrendingCard(name: "Dr. Dread", type: "Villain", level: "10", topPick: false,),
+              TrendingCard(name: "Dr. Dread", type: "Villain", level: "10", topPick: false,),
+            ],
           )
         )
       ],
