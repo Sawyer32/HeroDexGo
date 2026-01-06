@@ -5,11 +5,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hero_dex_go/firebase_options.dart';
 import 'package:hero_dex_go/repositories/auth_repository.dart';
+import 'package:hero_dex_go/repositories/search_repository.dart';
 import 'package:hero_dex_go/screens/auth/login_sreen.dart';
 import 'package:hero_dex_go/screens/auth/register_screen.dart';
 import 'package:hero_dex_go/screens/search/search_screen.dart';
 import 'package:hero_dex_go/screens/main_wrapper.dart';
 import 'package:hero_dex_go/screens/onboarding/onboarding.dart';
+import 'package:hero_dex_go/services/api_client.dart';
 import 'package:hero_dex_go/theme/theme_colors.dart';
 
 void main() async {
@@ -19,7 +21,16 @@ void main() async {
   );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const MyApp());
+  runApp(
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<ApiClient>(create: (context) => ApiClient()),
+        RepositoryProvider<AuthRepository>(create:(context) => AuthRepository()),
+        RepositoryProvider<SearchRepository>(create:(context) => SearchRepository(apiClient: context.read<ApiClient>()),),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -91,7 +102,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isLightTheme = true;
+  bool isLightTheme = false;
 
   void toggleTheme() {
     setState(() => isLightTheme = !isLightTheme);
@@ -100,26 +111,33 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => AuthRepository(),
-      child: MaterialApp.router(
+    return MaterialApp.router(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
       
         routerConfig: _router,
         theme: ThemeData(
           extensions: const <ThemeExtension<dynamic>>[
-            ThemeColors(primaryColor: Color(0xFF7F0DF2), backgroundColor: Color(0xFFF7F5F8))
+            ThemeColors(
+              primaryColor: Color(0xFF7F0DF2), 
+              primaryTextColor: Color(0xFF000000), 
+              backgroundColor: Color(0xFFF7F5F8), 
+              cardBackgroundColor: Color(0xFFFFFFFF)
+            ),
           ],
         ),
         darkTheme: ThemeData.dark().copyWith(
           extensions: <ThemeExtension<dynamic>>[
-            const ThemeColors(primaryColor: Color(0xFF7F0DF2), backgroundColor: Color(0xFF191022))
+            const ThemeColors(
+              primaryColor: Color(0xFF7F0DF2), 
+              primaryTextColor: Color(0xFFFFFFFF), 
+              backgroundColor: Color(0xFF191022), 
+              cardBackgroundColor: Color(0xFF2D2335)
+            ),
           ]
         ),
         
         themeMode: isLightTheme ? ThemeMode.light: ThemeMode.dark,
-      ),
-    );
+      );
   }
 }
