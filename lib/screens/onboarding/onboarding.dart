@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_bloc.dart';
-import 'package:hero_dex_go/bloc/onboarding/onboarding_event.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_state.dart';
 import 'package:hero_dex_go/screens/onboarding/pages/analytics_page.dart';
 import 'package:hero_dex_go/screens/onboarding/pages/gps_page.dart';
 import 'package:hero_dex_go/screens/onboarding/pages/info_page.dart';
-import 'package:hero_dex_go/theme/theme_colors.dart';
 
 class OnboardingScreen extends StatelessWidget {
   OnboardingScreen({super.key});

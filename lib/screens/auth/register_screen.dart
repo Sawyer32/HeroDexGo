@@ -12,8 +12,6 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeColors? themeColors = Theme.of(context).extension<ThemeColors>();
-    final Color primaryColor = themeColors?.primaryColor ?? Colors.blue;
     return BlocProvider(
       create: (context) => LoginBloc(
         authRepository: context.read<AuthRepository>(),
