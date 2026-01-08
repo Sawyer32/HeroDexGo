@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hero_dex_go/bloc/search/search_bloc.dart';
 import 'package:hero_dex_go/bloc/search/search_event.dart';
 import 'package:hero_dex_go/bloc/search/search_state.dart';
 import 'package:hero_dex_go/repositories/search_repository.dart';
 import 'package:hero_dex_go/screens/search/views/discover_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -98,6 +100,9 @@ class _SearchView extends StatelessWidget {
           ),
           title: Text(hero.name, style: const TextStyle(color: Colors.white)),
           subtitle: Text(hero.biography?.alterEgo.join(", ") ?? "", style: TextStyle(color: Colors.grey[400])),
+          onTap: () {
+            context.go("/details/${hero.id}");
+          },
         );
       },
     );

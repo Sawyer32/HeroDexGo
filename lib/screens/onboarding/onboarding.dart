@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_bloc.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_state.dart';
+import 'package:hero_dex_go/repositories/onboarding_repository.dart';
 import 'package:hero_dex_go/screens/onboarding/pages/analytics_page.dart';
 import 'package:hero_dex_go/screens/onboarding/pages/gps_page.dart';
 import 'package:hero_dex_go/screens/onboarding/pages/info_page.dart';
@@ -14,7 +15,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OnboardingBloc(),
+      create: (context) => OnboardingBloc(repository: context.read<OnboardingRepository>()),
       child: Scaffold(
         body: BlocConsumer<OnboardingBloc, OnboardingState>(
           listener: (context, state) {
