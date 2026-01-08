@@ -172,7 +172,8 @@ class _MyAppState extends State<MyApp> {
               primaryColor: Color(0xFF7F0DF2), 
               primaryTextColor: Color(0xFF000000), 
               backgroundColor: Color(0xFFF7F5F8), 
-              cardBackgroundColor: Color(0xFFFFFFFF)
+              cardBackgroundColor: Color(0xFFF0F0F0),
+              containerColor: Color.fromARGB(255, 236, 234, 234) 
             ),
           ],
         ),
@@ -182,7 +183,8 @@ class _MyAppState extends State<MyApp> {
               primaryColor: Color(0xFF7F0DF2), 
               primaryTextColor: Color(0xFFFFFFFF), 
               backgroundColor: Color(0xFF191022), 
-              cardBackgroundColor: Color(0xFF2D2335)
+              cardBackgroundColor: Color(0xFF2D2335),
+              containerColor: Color(0xFF2B2036)
             ),
           ]
         ),

@@ -5,6 +5,7 @@ import 'package:hero_dex_go/bloc/settings/settings_event.dart';
 import 'package:hero_dex_go/bloc/settings/settings_state.dart';
 import 'package:hero_dex_go/components/profile/settings_switch_tile.dart';
 import 'package:hero_dex_go/repositories/settings_repository.dart';
+import 'package:hero_dex_go/theme/theme_extensions.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -20,30 +21,28 @@ class _SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final containerColor = const Color(0xFF2B2036);
-    final primaryColor = const Color(0xFF7F0DF2);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF191022),
+      backgroundColor: context.colors.backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const .all(16),
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              const Text(
+              Text(
                 "Settings",
                 style: TextStyle(
-                  fontSize: 32, fontWeight: .bold, color: Colors.white
+                  fontSize: 32, fontWeight: .bold, color: context.colors.primaryTextColor
                 ),
               ),
               const SizedBox(height: 30),
 
-              _buildSectionHeader("Preferences", Icons.tune, primaryColor),
+              _buildSectionHeader("Preferences", Icons.tune, context.colors.primaryTextColor),
               const SizedBox(height: 30),
               Container(
                 decoration: BoxDecoration(
-                  color: containerColor,
+                  color: context.colors.containerColor,
                   borderRadius: .circular(20),
                 ),
                 child: BlocBuilder<SettingsBloc, SettingsState>(
@@ -71,7 +70,7 @@ class _SettingsView extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon, Color color) {
+  Widget _buildSectionHeader(String title, IconData icon, Color? color) {
     return Row(
       children: [
         Icon(icon, color: color),

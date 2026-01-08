@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hero_dex_go/theme/theme_extensions.dart';
 
 class SettingsSwitchTile extends StatelessWidget {
   final String title;
@@ -36,7 +37,7 @@ class SettingsSwitchTile extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                color: Colors.white,
+                color: context.colors.primaryTextColor,
                 fontSize: 16,
                 fontWeight: .w500
               ),

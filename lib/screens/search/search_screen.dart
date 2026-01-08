@@ -6,7 +6,9 @@ import 'package:hero_dex_go/bloc/search/search_event.dart';
 import 'package:hero_dex_go/bloc/search/search_state.dart';
 import 'package:hero_dex_go/repositories/search_repository.dart';
 import 'package:hero_dex_go/screens/search/views/discover_view.dart';
+import 'package:hero_dex_go/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hero_dex_go/theme/theme_extensions.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -32,9 +34,9 @@ class _SearchView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: .start,
               children: [
-                const Text(
+                Text(
                   "Discover",
-                  style: TextStyle(fontSize: 32, fontWeight: .bold, color: Colors.white)
+                  style: TextStyle(fontSize: 32, fontWeight: .bold, color: context.colors.primaryTextColor)
                 ),
                 const SizedBox(height: 16),
           
