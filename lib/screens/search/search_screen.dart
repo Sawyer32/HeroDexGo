@@ -16,7 +16,8 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SearchBloc(searchRepository: context.read<SearchRepository>()),
+      create: (context) =>
+          SearchBloc(searchRepository: context.read<SearchRepository>()),
       child: const _SearchView(),
     );
   }
@@ -28,38 +29,43 @@ class _SearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: .all(16),
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                Text(
-                  "Discover",
-                  style: TextStyle(fontSize: 32, fontWeight: .bold, color: context.colors.primaryTextColor)
+      body: SafeArea(
+        child: Padding(
+          padding: .all(16),
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                "Discover",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: .bold,
+                  color: context.colors.primaryTextColor,
                 ),
-                const SizedBox(height: 16),
-          
-                _buildSearchBar(context),
-                SizedBox(height: 16),
-                Expanded(
-                  child: BlocBuilder<SearchBloc, SearchState>(
-                    builder: (context, state) {
-                      if (state.status == SearchStatus.loading ||
+              ),
+              const SizedBox(height: 16),
+
+              _buildSearchBar(context),
+              SizedBox(height: 16),
+              Expanded(
+                child: BlocBuilder<SearchBloc, SearchState>(
+                  builder: (context, state) {
+                    if (state.status == SearchStatus.loading ||
                         state.status == SearchStatus.success ||
-                        (state.status == SearchStatus.initial && state.results.isNotEmpty)) {
-                          return _buildSearchResults(state);
-                      }
-          
-                      return buildDiscoverView(context);
-                    },
-                  ),
+                        (state.status == SearchStatus.initial &&
+                            state.results.isNotEmpty)) {
+                      return _buildSearchResults(state);
+                    }
+
+                    return buildDiscoverView(context);
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        )
-      );
+        ),
+      ),
+    );
   }
 
   Widget _buildSearchBar(BuildContext context) {
@@ -80,30 +86,70 @@ class _SearchView extends StatelessWidget {
   }
 
   Widget _buildSearchResults(SearchState state) {
-  if (state.status == SearchStatus.loading) {
-    return const Center(child: CircularProgressIndicator());
-  }
-  
-  if (state.results.isEmpty && state.status != SearchStatus.initial) {
-     return const Center(child: Text("No heroes found.", style: TextStyle(color: Colors.white)));
-  }
+    if (state.status == SearchStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-  if (state.results.isEmpty) {
-      return const SizedBox.shrink(); 
-  }
+    if (state.results.isEmpty &&
+        state.status != SearchStatus.initial &&
+        state.status != SearchStatus.failure) {
+      return const Center(
+        child: Text("No heroes found.", style: TextStyle(color: Colors.white)),
+      );
+    }
 
-  return ListView.builder(
+    if (state.status == SearchStatus.failure) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, color: Colors.red, size: 48),
+              const SizedBox(height: 16),
+              Text(
+                "Oops! Something went wrong.",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                state.errorMessage.isNotEmpty
+                    ? state.errorMessage
+                    : "An unknown error occurred.",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey[400]),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (state.results.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return ListView.builder(
       itemCount: state.results.length,
       itemBuilder: (context, index) {
         final hero = state.results[index];
         return ListTile(
           leading: CircleAvatar(
-            backgroundImage: (hero.image?.url != null) ? NetworkImage(hero.image!.url!) : null,
+            backgroundImage: (hero.image?.url != null)
+                ? NetworkImage(hero.image!.url!)
+                : null,
           ),
           title: Text(hero.name, style: const TextStyle(color: Colors.white)),
-          subtitle: Text(hero.biography?.alterEgo.join(", ") ?? "", style: TextStyle(color: Colors.grey[400])),
+          subtitle: Text(
+            hero.biography?.alterEgo.join(", ") ?? "",
+            style: TextStyle(color: Colors.grey[400]),
+          ),
           onTap: () {
-            context.go("/details/${hero.id}");
+            context.go("/search/details/${hero.id}");
           },
         );
       },

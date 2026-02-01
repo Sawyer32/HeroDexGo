@@ -10,23 +10,26 @@ class RecentSearches extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SearchBloc, SearchState>(
-        builder: (context, state) {
-          if (state.previousSearches.isNotEmpty) {
-            return Column(
-              crossAxisAlignment: .start,
-              children: [
-                const Padding(
-                  padding: .symmetric(vertical: 16.0),
-                  child: Text("Recent Searches", style: TextStyle(color: Colors.white, fontWeight: .bold))
+      builder: (context, state) {
+        if (state.previousSearches.isNotEmpty) {
+          return Column(
+            crossAxisAlignment: .start,
+            children: [
+              const Padding(
+                padding: .symmetric(vertical: 16.0),
+                child: Text(
+                  "Recent Searches",
+                  style: TextStyle(color: Colors.white, fontWeight: .bold),
                 ),
-                _previousSearchPhrases(context, state)
-              ],
-            );
-          }
-
-          return const SizedBox.shrink();
+              ),
+              _previousSearchPhrases(context, state),
+            ],
+          );
         }
-      );
+
+        return const SizedBox.shrink();
+      },
+    );
   }
 
   Widget _previousSearchPhrases(BuildContext context, SearchState state) {
@@ -46,7 +49,7 @@ class RecentSearches extends StatelessWidget {
         padding: .all(8),
         decoration: BoxDecoration(
           color: const Color(0xFF2B2036),
-          borderRadius: .circular(8)
+          borderRadius: .circular(8),
         ),
         child: const Icon(Icons.history, color: Colors.grey, size: 20),
       ),
@@ -61,7 +64,7 @@ class RecentSearches extends StatelessWidget {
       onTap: () {
         // To search again
         context.read<SearchBloc>().add(SearchQueryChanged(text));
-      }
+      },
     );
   }
 }

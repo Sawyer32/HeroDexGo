@@ -15,6 +15,7 @@ import 'package:hero_dex_go/repositories/search_repository.dart';
 import 'package:hero_dex_go/repositories/settings_repository.dart';
 import 'package:hero_dex_go/screens/auth/login_sreen.dart';
 import 'package:hero_dex_go/screens/auth/register_screen.dart';
+import 'package:hero_dex_go/screens/hero/hero_screen.dart';
 import 'package:hero_dex_go/screens/profile/profile_screen.dart';
 import 'package:hero_dex_go/screens/search/search_screen.dart';
 import 'package:hero_dex_go/screens/main_wrapper.dart';
@@ -133,7 +134,13 @@ class _MyAppState extends State<MyApp> {
               routes: [
                 GoRoute(
                   path: '/search',
-                  builder: (context, state) => const SearchScreen()
+                  builder: (context, state) => const SearchScreen(),
+                  routes: [
+                    GoRoute(
+                      path: 'details/:id',
+                      builder: (context, state) => HeroDetailScreen(heroId: state.pathParameters['id'],)
+                    ),
+                  ],
                 ),
               ],
             ),

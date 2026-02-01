@@ -21,7 +21,6 @@ class _SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: context.colors.backgroundColor,
       body: SafeArea(
@@ -33,12 +32,18 @@ class _SettingsView extends StatelessWidget {
               Text(
                 "Settings",
                 style: TextStyle(
-                  fontSize: 32, fontWeight: .bold, color: context.colors.primaryTextColor
+                  fontSize: 32,
+                  fontWeight: .bold,
+                  color: context.colors.primaryTextColor,
                 ),
               ),
               const SizedBox(height: 30),
 
-              _buildSectionHeader("Preferences", Icons.tune, context.colors.primaryTextColor),
+              _buildSectionHeader(
+                "Preferences",
+                Icons.tune,
+                context.colors.primaryTextColor,
+              ),
               const SizedBox(height: 30),
               Container(
                 decoration: BoxDecoration(
@@ -55,18 +60,95 @@ class _SettingsView extends StatelessWidget {
                           iconColor: const Color(0xFF5E5CE6),
                           value: state.isDarkMode,
                           onChanged: (value) {
-                            context.read<SettingsBloc>().add(SettingsToggleTheme(isDark: value));
-                          }
-                        )
+                            context.read<SettingsBloc>().add(
+                              SettingsToggleTheme(isDark: value),
+                            );
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Divider(
+                            height: 1,
+                            color: context.colors.primaryTextColor?.withValues(
+                              alpha: 0.1,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            context.read<SettingsBloc>().add(
+                              SettingsToggleAnalytics(
+                                newVaule: !state.analyticsEnabled,
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.withValues(alpha: 0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.analytics_outlined,
+                                    color: Colors.orange,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Text(
+                                    "Analytics",
+                                    style: TextStyle(
+                                      color: context.colors.primaryTextColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: state.analyticsEnabled
+                                        ? Colors.green.withValues(alpha: 0.2)
+                                        : Colors.red.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    state.analyticsEnabled
+                                        ? "Active"
+                                        : "Inactive",
+                                    style: TextStyle(
+                                      color: state.analyticsEnabled
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     );
-                  }
-                )
-              )
+                  },
+                ),
+              ),
             ],
-          )
-        )
-      )
+          ),
+        ),
+      ),
     );
   }
 
@@ -82,8 +164,8 @@ class _SettingsView extends StatelessWidget {
             fontWeight: .bold,
             letterSpacing: 1.2,
             fontSize: 12,
-          )
-        )
+          ),
+        ),
       ],
     );
   }
