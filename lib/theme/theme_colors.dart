@@ -39,9 +39,4 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
       containerColor: Color.lerp(containerColor, other.containerColor, t)
     );
   }
-
-  // Optional
-  @override
-  String toString() => 'ThemeColors(primaryColor: $primaryColor, backgroundLight: $backgroundColor)';
-
 }

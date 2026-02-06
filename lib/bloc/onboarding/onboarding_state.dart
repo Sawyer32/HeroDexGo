@@ -11,7 +11,6 @@ class OnboardingState {
     this.isCompleted = false,
   });
 
-  // A copyWith-method is standard in BLoC to update state immutably
   OnboardingState copyWith({
     int? pageIndex,
     bool? analyticsAccepted,
@@ -22,7 +21,7 @@ class OnboardingState {
       pageIndex: pageIndex ?? this.pageIndex,
       analyticsAccepted: analyticsAccepted ?? this.analyticsAccepted,
       locationGranted: locationGranted ?? this.locationGranted,
-      isCompleted: isCompleted ?? this.isCompleted
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 }

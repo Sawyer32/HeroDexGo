@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hero_dex_go/models/hero_models.dart';
 import 'package:http/http.dart' as http;
@@ -108,6 +109,60 @@ class ApiClient {
       return heroes;
     } catch (e) {
       throw Exception('Failed to save hero to DB: $e');
+    }
+  }
+
+  // Add a method to add a hero to the user's collection
+  Future<void> addHeroToCollection(String heroId) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      final docRef = db
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('collection')
+          .doc(heroId);
+      await docRef.set({'heroId': heroId});
+
+      debugPrint('Hero added to collection: $heroId');
+    } catch (e) {
+      throw Exception('Failed to add hero to collection: $e');
+    }
+  }
+
+  Future<bool> isHeroInCollection(String heroId) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      final docRef = db
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('collection')
+          .doc(heroId);
+      final snapshot = await docRef.get();
+      return snapshot.exists;
+    } catch (e) {
+      throw Exception('Failed to check if hero is in collection: $e');
+    }
+  }
+
+  Future<List<HeroModel>> getUserCollection() async {
+    try {
+      final List<HeroModel> heroes = [];
+      final db = FirebaseFirestore.instance;
+      final snapshot = await db
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('collection')
+          .get();
+      final List<HeroId> heroIds = snapshot.docs
+          .map((doc) => HeroId.fromJson(doc.data()))
+          .toList();
+      debugPrint('Hero collection: $heroIds');
+      for (final hero in heroIds) {
+        heroes.add(await getHeroById(hero.heroId));
+      }
+      return heroes;
+    } catch (e) {
+      throw Exception('Failed to get user collection: $e');
     }
   }
 }

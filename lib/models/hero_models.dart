@@ -26,11 +26,19 @@ class HeroModel {
       response: json['response'] ?? '',
       id: json['id'] ?? '',
       name: json['name'] ?? '',
-      powerstats: json['powerstats'] != null ? HeroPowerStats.fromJson(json['powerstats']) : null,
-      biography: json['biography'] != null ? HeroBiography.fromJson(json['biography']) : null,
-      appearance: json['appearance'] != null ? HeroAppearance.fromJson(json['appearance']) : null,
+      powerstats: json['powerstats'] != null
+          ? HeroPowerStats.fromJson(json['powerstats'])
+          : null,
+      biography: json['biography'] != null
+          ? HeroBiography.fromJson(json['biography'])
+          : null,
+      appearance: json['appearance'] != null
+          ? HeroAppearance.fromJson(json['appearance'])
+          : null,
       work: json['work'] != null ? HeroWork.fromJson(json['work']) : null,
-      connections: json['connections'] != null ? HeroConnection.fromJson(json['connections']) : null,
+      connections: json['connections'] != null
+          ? HeroConnection.fromJson(json['connections'])
+          : null,
       image: json['image'] != null ? HeroImage.fromJson(json['image']) : null,
     );
   }
@@ -47,6 +55,20 @@ class HeroModel {
       'connections': connections?.toJson(),
       'image': image ?? {},
     };
+  }
+}
+
+class HeroId {
+  final String heroId;
+
+  HeroId(this.heroId);
+
+  factory HeroId.fromJson(Map<String, dynamic> json) {
+    return HeroId(json['heroId']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'heroId': heroId};
   }
 }
 
@@ -111,7 +133,10 @@ class HeroConnection {
   HeroConnection(this.groupAffiliation, this.relative);
 
   factory HeroConnection.fromJson(Map<String, dynamic> json) {
-    return HeroConnection(json['group-affiliation'] ?? '', json['relatives'] ?? '');
+    return HeroConnection(
+      json['group-affiliation'] ?? '',
+      json['relatives'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -154,12 +179,16 @@ class HeroAppearance {
   factory HeroAppearance.fromJson(Map<String, dynamic> json) {
     List<String> heightList = [];
     if (json['height'] is List) {
-      heightList = (json['height'] as List).map((item) => item.toString()).toList();
+      heightList = (json['height'] as List)
+          .map((item) => item.toString())
+          .toList();
     }
 
     List<String> weightList = [];
     if (json['weight'] is List) {
-      weightList = (json['weight'] as List).map((item) => item.toString()).toList();
+      weightList = (json['weight'] as List)
+          .map((item) => item.toString())
+          .toList();
     }
 
     return HeroAppearance(
@@ -173,13 +202,13 @@ class HeroAppearance {
   }
 
   Map<String, dynamic> toJson() => {
-        'gender': gender,
-        'race': race,
-        'height': height,
-        'weight': weight,
-        'eye-color': eyeColor,
-        'hair-color': hairColor,
-      };
+    'gender': gender,
+    'race': race,
+    'height': height,
+    'weight': weight,
+    'eye-color': eyeColor,
+    'hair-color': hairColor,
+  };
 }
 
 class HeroBiography {

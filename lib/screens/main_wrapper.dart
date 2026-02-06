@@ -40,7 +40,7 @@ class MainWrapper extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_sharp),
-            label: 'Profile'
+            label: 'Settings'
           )
         ]
       ),

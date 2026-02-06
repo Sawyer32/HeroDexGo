@@ -12,12 +12,10 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     : _repository = repository,
       super(OnboardingState()) {
     on<OnboardingLoadPreferences>(_onLoadPerferences);
-    // Handle next page
     on<OnboardingNextPage>((event, emit) {
       emit(state.copyWith(pageIndex: state.pageIndex + 1));
     });
 
-    // Handle analytics
     on<OnboardingAnalyticsChanged>((event, emit) {
       FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(event.accepted);
       emit(
@@ -28,9 +26,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       );
     });
 
-    // Handle GPS request
     on<OnboardingRequestLocation>((event, emit) async {
-      // Ask system
       PermissionStatus status = await Permission.location.request();
 
       if (status.isGranted) {
@@ -41,7 +37,6 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       }
     });
 
-    // Finish onboarding
     on<OnboardingCompleted>((event, emit) {
       try {
         _onCompleted(event, emit);

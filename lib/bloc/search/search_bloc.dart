@@ -9,23 +9,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchRepository _searchRepository;
 
-  SearchBloc({required SearchRepository searchRepository}) : _searchRepository = searchRepository, super(SearchState()) {
-    
+  SearchBloc({required SearchRepository searchRepository})
+    : _searchRepository = searchRepository,
+      super(SearchState()) {
     on<SearchLoadHistory>(_onLoadHistory);
     add(SearchLoadHistory());
     on<SearchQueryChanged>(
       _onSearchQueryChanged,
       transformer: (events, mapper) {
         return events
-          .debounceTime(const Duration(milliseconds: 300)) // Vänta 300ms innan sökning
-          .distinct() // Ignorera om det är exakt samma text som nyss
-          .switchMap(mapper); // switchMap avbryter gamla sökningar om en ny sökning kommer
+            .debounceTime(
+              const Duration(milliseconds: 300),
+            ) // Vänta 300ms innan sökning
+            .distinct()
+            .switchMap(mapper);
       },
     );
 
-    on<RemoveItemFromHistory>(
-      _onRemoveItemFromHistory
-    );
+    on<RemoveItemFromHistory>(_onRemoveItemFromHistory);
   }
 
   void _onLoadHistory(SearchLoadHistory event, Emitter<SearchState> emit) {
@@ -71,10 +72,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       if (results.isEmpty) {
         emit(state.copyWith(status: SearchStatus.success, results: []));
       } else {
-        emit(state.copyWith(status: SearchStatus.success, results: results, previousSearches: updatedHistory));
+        emit(
+          state.copyWith(
+            status: SearchStatus.success,
+            results: results,
+            previousSearches: updatedHistory,
+          ),
+        );
       }
     } catch (e) {
-      emit(state.copyWith(status: SearchStatus.failure, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          status: SearchStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

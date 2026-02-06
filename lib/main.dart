@@ -13,10 +13,12 @@ import 'package:hero_dex_go/repositories/auth_repository.dart';
 import 'package:hero_dex_go/repositories/onboarding_repository.dart';
 import 'package:hero_dex_go/repositories/search_repository.dart';
 import 'package:hero_dex_go/repositories/settings_repository.dart';
+import 'package:hero_dex_go/repositories/collection_repository.dart';
 import 'package:hero_dex_go/screens/auth/login_sreen.dart';
 import 'package:hero_dex_go/screens/auth/register_screen.dart';
+import 'package:hero_dex_go/screens/collection/user_collection_screen.dart';
 import 'package:hero_dex_go/screens/hero/hero_screen.dart';
-import 'package:hero_dex_go/screens/profile/profile_screen.dart';
+import 'package:hero_dex_go/screens/profile/settings_screen.dart';
 import 'package:hero_dex_go/screens/search/search_screen.dart';
 import 'package:hero_dex_go/screens/main_wrapper.dart';
 import 'package:hero_dex_go/screens/onboarding/onboarding.dart';
@@ -26,40 +28,51 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(
-    fileName: "assets/.env"
-  );
+  await dotenv.load(fileName: "assets/.env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = await SharedPreferences.getInstance();
   final String key = 'onboarding';
   final String? onboardingJson = prefs.getString(key);
-  print("DEBUG: Raw JSON from prefs: $onboardingJson");
   bool onboardingCompleted = false;
 
   if (onboardingJson != null) {
     try {
       final Map<String, dynamic> decodedMap = jsonDecode(onboardingJson);
-      print('DEBUG: Decoded Map: $decodedMap');
       onboardingCompleted = decodedMap['onboarding_completed'] ?? false;
-      print('DEBUG: onboardingCompleted är: $onboardingCompleted');
     } catch (e) {
-      print("DEBUG ERROR: Could not parse JSON: $e");
+      print(
+        "DEBUG ERROR: Could not parse JSON: $e",
+      ); // TODO: Replace with proper logging
     }
   } else {
     print("DEBUG: Did not find any data for key '$key'");
   }
 
   final String startRoute = onboardingCompleted ? '/login' : '/';
-  print("DEBUG: Starting app on route: $startRoute");
 
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider<ApiClient>(create: (context) => ApiClient()),
-        RepositoryProvider<AuthRepository>(create:(context) => AuthRepository(prefs: prefs)),
-        RepositoryProvider<SearchRepository>(create:(context) => SearchRepository(apiClient: context.read<ApiClient>(), prefs: prefs),),
-        RepositoryProvider<SettingsRepository>(create: (context) => SettingsRepository(prefs: prefs),),
-        RepositoryProvider<OnboardingRepository>(create:(context) => OnboardingRepository(prefs: prefs),)
+        RepositoryProvider<AuthRepository>(
+          create: (context) => AuthRepository(prefs: prefs),
+        ),
+        RepositoryProvider<SearchRepository>(
+          create: (context) => SearchRepository(
+            apiClient: context.read<ApiClient>(),
+            prefs: prefs,
+          ),
+        ),
+        RepositoryProvider<CollectionRepository>(
+          create: (context) =>
+              CollectionRepository(apiClient: context.read<ApiClient>()),
+        ),
+        RepositoryProvider<SettingsRepository>(
+          create: (context) => SettingsRepository(prefs: prefs),
+        ),
+        RepositoryProvider<OnboardingRepository>(
+          create: (context) => OnboardingRepository(prefs: prefs),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -74,10 +87,6 @@ void main() async {
     ),
   );
 }
-
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _sectionNavigatorKey = GlobalKey<NavigatorState>();
-
 
 class MyApp extends StatefulWidget {
   final String initialRoute;
@@ -101,19 +110,19 @@ class _MyAppState extends State<MyApp> {
           path: '/',
           builder: (BuildContext context, GoRouterState state) {
             return OnboardingScreen();
-          }
+          },
         ),
         GoRoute(
           path: '/login',
           builder: (BuildContext context, GoRouterState state) {
             return LoginScreen();
-          }
+          },
         ),
         GoRoute(
           path: '/register',
           builder: (BuildContext context, GoRouterState state) {
             return RegisterScreen();
-          }
+          },
         ),
 
         StatefulShellRoute.indexedStack(
@@ -125,7 +134,7 @@ class _MyAppState extends State<MyApp> {
               routes: [
                 GoRoute(
                   path: '/collection',
-                  builder: (context, state) => const Placeholder() // TODO: Build collection page
+                  builder: (context, state) => const UserCollectionScreen(),
                 ),
               ],
             ),
@@ -138,24 +147,25 @@ class _MyAppState extends State<MyApp> {
                   routes: [
                     GoRoute(
                       path: 'details/:id',
-                      builder: (context, state) => HeroDetailScreen(heroId: state.pathParameters['id'],)
+                      builder: (context, state) =>
+                          HeroDetailScreen(heroId: state.pathParameters['id']),
                     ),
                   ],
                 ),
               ],
             ),
-            
+
             StatefulShellBranch(
               routes: [
                 GoRoute(
-                  path: '/profile',
-                  builder: (context, state) => const ProfileScreen()
+                  path: '/settings',
+                  builder: (context, state) => const SettingsScreen(),
                 ),
               ],
             ),
-          ]
-        )
-      ]
+          ],
+        ),
+      ],
     );
   }
 
@@ -165,38 +175,38 @@ class _MyAppState extends State<MyApp> {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, state) {
         return MaterialApp.router(
-        title: 'HeroDex GO',
-        debugShowCheckedModeBanner: false,
-      
-        routerConfig: _router,
+          title: 'HeroDex GO',
+          debugShowCheckedModeBanner: false,
 
-        themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          routerConfig: _router,
 
-        theme: ThemeData(
-          brightness: .light,
-          extensions: const <ThemeExtension<dynamic>>[
-            ThemeColors(
-              primaryColor: Color(0xFF7F0DF2), 
-              primaryTextColor: Color(0xFF000000), 
-              backgroundColor: Color(0xFFF7F5F8), 
-              cardBackgroundColor: Color(0xFFF0F0F0),
-              containerColor: Color.fromARGB(255, 236, 234, 234) 
-            ),
-          ],
-        ),
-        darkTheme: ThemeData.dark().copyWith(
-          extensions: <ThemeExtension<dynamic>>[
-            const ThemeColors(
-              primaryColor: Color(0xFF7F0DF2), 
-              primaryTextColor: Color(0xFFFFFFFF), 
-              backgroundColor: Color(0xFF191022), 
-              cardBackgroundColor: Color(0xFF2D2335),
-              containerColor: Color(0xFF2B2036)
-            ),
-          ]
-        ),
-      );
-      }
+          themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+
+          theme: ThemeData(
+            brightness: .light,
+            extensions: const <ThemeExtension<dynamic>>[
+              ThemeColors(
+                primaryColor: Color(0xFF7F0DF2),
+                primaryTextColor: Color(0xFF000000),
+                backgroundColor: Color(0xFFF7F5F8),
+                cardBackgroundColor: Color(0xFFF0F0F0),
+                containerColor: Color.fromARGB(255, 236, 234, 234),
+              ),
+            ],
+          ),
+          darkTheme: ThemeData.dark().copyWith(
+            extensions: <ThemeExtension<dynamic>>[
+              const ThemeColors(
+                primaryColor: Color(0xFF7F0DF2),
+                primaryTextColor: Color(0xFFFFFFFF),
+                backgroundColor: Color(0xFF191022),
+                cardBackgroundColor: Color(0xFF2D2335),
+                containerColor: Color(0xFF2B2036),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

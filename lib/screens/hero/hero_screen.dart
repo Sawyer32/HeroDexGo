@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hero_dex_go/models/hero_models.dart';
 import 'package:hero_dex_go/services/api_client.dart';
+import 'package:hero_dex_go/theme/theme_extensions.dart';
 
 class HeroDetailScreen extends StatefulWidget {
   final String? heroId;
@@ -18,6 +19,14 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
   void initState() {
     super.initState();
     _heroFuture = _fetchHero(widget.heroId!);
+  }
+
+  Future<bool> _checkIfHeroInCollection() async {
+    return ApiClient().isHeroInCollection(widget.heroId!);
+  }
+
+  Future<void> _addToCollection() async {
+    await ApiClient().addHeroToCollection(widget.heroId!);
   }
 
   Future<HeroModel> _fetchHero(String id) async {
@@ -234,10 +243,10 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: isWideScreen
                               ? 4
-                              : 2, // 4 på webb, 2 på mobil
+                              : 2, 
                           mainAxisSpacing: 16,
                           crossAxisSpacing: 16,
-                          childAspectRatio: 1.4, // Justera formen på korten
+                          childAspectRatio: 1.4, 
                         ),
                       ),
                     ),
@@ -300,31 +309,14 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
                       ),
                     ),
                   ),
+                  SliverToBoxAdapter(
+                    child: _buildBottomNavigationBar(),
+                  ),
                 ],
               ),
             ),
           );
         },
-      ),
-
-      // 4. BOTTOM BUTTON
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.add_box_outlined),
-            label: const Text("Add to Collection"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF7F0DF2),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -332,6 +324,29 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
   double _parseStat(String stat) {
     if (stat == "null" || stat.isEmpty) return 0.0;
     return (double.tryParse(stat) ?? 0) / 100.0;
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            _addToCollection();
+          },
+          icon: const Icon(Icons.add_box_outlined),
+          label: const Text("Add to Collection"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF7F0DF2),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildInfoRow(String label, String value) {
@@ -357,7 +372,6 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
     );
   }
 
-  // Hjälpmetod för taggar
   Widget _buildTag(String text, Color bg, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -377,7 +391,6 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
     );
   }
 
-  // Hjälpmetod för Stats-kort
   Widget _buildStatCard(
     String label,
     String value,
@@ -423,8 +436,8 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
           ),
           LinearProgressIndicator(
             value: percent,
-            backgroundColor: Colors.black26,
-            color: const Color(0xFF7F0DF2), // Din accentfärg
+            backgroundColor: context.colors.backgroundColor,
+            color: context.colors.primaryColor,
             borderRadius: BorderRadius.circular(4),
           ),
         ],

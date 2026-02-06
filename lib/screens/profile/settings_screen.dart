@@ -7,8 +7,8 @@ import 'package:hero_dex_go/components/profile/settings_switch_tile.dart';
 import 'package:hero_dex_go/repositories/settings_repository.dart';
 import 'package:hero_dex_go/theme/theme_extensions.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
