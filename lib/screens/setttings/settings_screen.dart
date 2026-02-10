@@ -145,6 +145,108 @@ class _SettingsView extends StatelessWidget {
                   },
                 ),
               ),
+              const SizedBox(height: 16),
+              Container(
+                decoration: BoxDecoration(
+                  color: context.colors.containerColor,
+                  borderRadius: .circular(20),
+                ),
+                child: BlocBuilder<SettingsBloc, SettingsState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          width: double.infinity,
+                          child: Column(
+                            crossAxisAlignment: .start,
+                            mainAxisAlignment: .start,
+                            children: [
+                              Text(
+                                "HeroDexGo information",
+                                style: TextStyle(
+                                  color: context.colors.primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: .spaceBetween,
+                                children: [
+                                  Text(
+                                    "Version",
+                                    style: TextStyle(
+                                      color: context.colors.primaryTextColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    "0.0.1-alpha",
+                                    style: TextStyle(
+                                      color: context.colors.primaryTextColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: .spaceBetween,
+                                children: [
+                                  Text(
+                                    "Creator",
+                                    style: TextStyle(
+                                      color: context.colors.primaryTextColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Jesper Hunesjö",
+                                    style: TextStyle(
+                                      color: context.colors.primaryTextColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: .spaceBetween,
+                                children: [
+                                  Text(
+                                    "Year",
+                                    style: TextStyle(
+                                      color: context.colors.primaryTextColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    "2026",
+                                    style: TextStyle(
+                                      color: context.colors.primaryTextColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
