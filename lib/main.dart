@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,6 +36,19 @@ void main() async {
   final String key = 'onboarding';
   final String? onboardingJson = prefs.getString(key);
   bool onboardingCompleted = false;
+
+  final bool analyticsEnabled =
+      prefs.getBool('settings_analytics_enabled') ?? false;
+  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(
+    analyticsEnabled,
+  );
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+    analyticsEnabled,
+  );
+
+  if (analyticsEnabled) {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  }
 
   if (onboardingJson != null) {
     try {

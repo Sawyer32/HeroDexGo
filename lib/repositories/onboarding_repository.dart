@@ -6,7 +6,7 @@ class OnboardingRepository {
 
   static const String kOnboardingSettings = 'onboarding';
   static const String kOnboardingCompleted = 'onboarding_completed';
-  static const String kAnalyticsAccepted = 'analytics_accepted';
+  static const String kAnalyticsAccepted = 'settings_analytics_enabled';
   static const String kLocationGranted = 'location_granted';
 
   OnboardingRepository({required SharedPreferences prefs}) : _prefs = prefs;
@@ -17,6 +17,10 @@ class OnboardingRepository {
     String encodedMap = json.encode(preferences);
 
     await _prefs.setString(kOnboardingSettings, encodedMap);
+
+    if (preferences.containsKey(kAnalyticsAccepted)) {
+      await _prefs.setBool(kAnalyticsAccepted, preferences[kAnalyticsAccepted]);
+    }
   }
 
   Map<String, dynamic> getOnboardingPreferences() {

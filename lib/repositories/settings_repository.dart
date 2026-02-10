@@ -1,12 +1,12 @@
-
 import 'dart:convert';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsRepository {
   final SharedPreferences _prefs;
-  
+
   static const String kSettingsPreferences = 'settings_preferences';
   static const String kThemeMode = 'settings_theme_mode';
   static const String kAnalyticsEnabled = 'settings_analytics_enabled';
@@ -29,7 +29,11 @@ class SettingsRepository {
   Future<void> setAnalyticsEnabled(bool enabled) async {
     await _prefs.setBool(kAnalyticsEnabled, enabled);
 
-    // TODO: FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(enabled);
+    if (enabled) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    } else {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+    }
   }
 
   bool getAnalyticsEnabled() {

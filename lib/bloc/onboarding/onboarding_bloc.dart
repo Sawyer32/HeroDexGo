@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero_dex_go/bloc/onboarding/onboarding_event.dart';
@@ -18,6 +19,11 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
 
     on<OnboardingAnalyticsChanged>((event, emit) {
       FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(event.accepted);
+      if (event.accepted) {
+        FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      } else {
+        FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      }
       emit(
         state.copyWith(
           analyticsAccepted: event.accepted,
@@ -58,6 +64,8 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       OnboardingRepository.kLocationGranted: state.locationGranted,
     };
 
+    await FirebaseAnalytics.instance.logTutorialComplete();
+
     await _repository.saveOnboardingPreferences(preferencesToSave);
   }
 
@@ -69,6 +77,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
         .getOnboardingPreferences();
 
     if (prefsMap.isEmpty) {
+      FirebaseAnalytics.instance.logTutorialBegin();
       return;
     }
 
