@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hero_dex_go/bloc/collection/collection_event.dart';
+import 'package:hero_dex_go/bloc/collection/collection_bloc.dart';
 import 'package:hero_dex_go/bloc/settings/settings_bloc.dart';
 import 'package:hero_dex_go/bloc/settings/settings_event.dart';
 import 'package:hero_dex_go/bloc/settings/settings_state.dart';
@@ -20,7 +22,7 @@ import 'package:hero_dex_go/screens/auth/login_sreen.dart';
 import 'package:hero_dex_go/screens/auth/register_screen.dart';
 import 'package:hero_dex_go/screens/collection/user_collection_screen.dart';
 import 'package:hero_dex_go/screens/hero/hero_screen.dart';
-import 'package:hero_dex_go/screens/profile/settings_screen.dart';
+import 'package:hero_dex_go/screens/setttings/settings_screen.dart';
 import 'package:hero_dex_go/screens/search/search_screen.dart';
 import 'package:hero_dex_go/screens/main_wrapper.dart';
 import 'package:hero_dex_go/screens/onboarding/onboarding.dart';
@@ -95,6 +97,11 @@ void main() async {
             create: (context) => SettingsBloc(
               settingsRepository: context.read<SettingsRepository>(),
             )..add(SettingsLoad()),
+          ),
+          BlocProvider<CollectionBloc>(
+            create: (context) => CollectionBloc(
+              collectionRepository: context.read<CollectionRepository>(),
+            )..add(CollectionLoad()),
           ),
         ],
         child: MyApp(initialRoute: startRoute),

@@ -4,7 +4,6 @@ import 'package:hero_dex_go/bloc/collection/collection_bloc.dart';
 import 'package:hero_dex_go/bloc/collection/collection_event.dart';
 import 'package:hero_dex_go/bloc/collection/collection_state.dart';
 import 'package:hero_dex_go/models/hero_models.dart';
-import 'package:hero_dex_go/repositories/collection_repository.dart';
 import 'package:hero_dex_go/theme/theme_extensions.dart';
 
 class UserCollectionScreen extends StatelessWidget {
@@ -12,12 +11,7 @@ class UserCollectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CollectionBloc(
-        collectionRepository: context.read<CollectionRepository>(),
-      )..add(CollectionLoad()),
-      child: const _UserCollectionView(),
-    );
+    return const _UserCollectionView();
   }
 }
 

@@ -57,7 +57,7 @@ class _SearchView extends StatelessWidget {
                       return _buildSearchResults(state);
                     }
 
-                    return buildDiscoverView(context);
+                    return const DiscoverView();
                   },
                 ),
               ),
