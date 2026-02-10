@@ -1,3 +1,4 @@
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +18,27 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       emit(state.copyWith(pageIndex: state.pageIndex + 1));
     });
 
-    on<OnboardingAnalyticsChanged>((event, emit) {
-      FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(event.accepted);
+    on<OnboardingAnalyticsChanged>((event, emit) async {
+      bool isAllowed = event.accepted;
+
       if (event.accepted) {
+        // Request ATT permission on iOS
+        final status =
+            await AppTrackingTransparency.requestTrackingAuthorization();
+        isAllowed =
+            status == TrackingStatus.authorized ||
+            status == TrackingStatus.notSupported;
+      }
+
+      FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(isAllowed);
+      if (isAllowed) {
         FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       } else {
         FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
       }
       emit(
         state.copyWith(
-          analyticsAccepted: event.accepted,
+          analyticsAccepted: isAllowed,
           pageIndex: state.pageIndex + 1,
         ),
       );
