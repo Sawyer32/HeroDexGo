@@ -112,7 +112,6 @@ class ApiClient {
     }
   }
 
-  // Add a method to add a hero to the user's collection
   Future<void> addHeroToCollection(String heroId) async {
     try {
       final db = FirebaseFirestore.instance;
@@ -126,6 +125,22 @@ class ApiClient {
       debugPrint('Hero added to collection: $heroId');
     } catch (e) {
       throw Exception('Failed to add hero to collection: $e');
+    }
+  }
+
+  Future<void> removeHeroFromCollection(String heroId) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      final docRef = db
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('collection')
+          .doc(heroId);
+      await docRef.delete();
+
+      debugPrint('Hero removed from collection: $heroId');
+    } catch (e) {
+      throw Exception('Failed to remove hero from collection: $e');
     }
   }
 

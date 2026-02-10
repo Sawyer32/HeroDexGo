@@ -10,6 +10,23 @@ class CollectionBloc extends Bloc<CollectionEvent, CollectionState> {
     : super(const CollectionState()) {
     on<CollectionLoad>(_onCollectionLoad);
     on<CollectionRefresh>(_onCollectionRefresh);
+    on<CollectionRemoveHero>(_onCollectionRemoveHero);
+  }
+
+  Future<void> _onCollectionRemoveHero(
+    CollectionRemoveHero event,
+    Emitter<CollectionState> emit,
+  ) async {
+    try {
+      final updatedCollection = state.collection
+          .where((hero) => hero.id != event.heroId)
+          .toList();
+      emit(state.copyWith(collection: updatedCollection));
+
+      await collectionRepository.removeHeroFromCollection(event.heroId);
+    } catch (e) {
+      add(CollectionLoad());
+    }
   }
 
   Future<void> _onCollectionLoad(
@@ -39,8 +56,6 @@ class CollectionBloc extends Bloc<CollectionEvent, CollectionState> {
     CollectionRefresh event,
     Emitter<CollectionState> emit,
   ) async {
-    // We can just trigger a load again, or keep current data while loading
-    // For now, let's just reuse the load logic but maybe we don't clear the list first
     add(CollectionLoad());
   }
 }

@@ -15,6 +15,10 @@ class CollectionRepository {
     return _apiClient.addHeroToCollection(heroId);
   }
 
+  Future<void> removeHeroFromCollection(String heroId) async {
+    return _apiClient.removeHeroFromCollection(heroId);
+  }
+
   Future<bool> isHeroInCollection(String heroId) async {
     return _apiClient.isHeroInCollection(heroId);
   }

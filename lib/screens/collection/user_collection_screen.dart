@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hero_dex_go/bloc/collection/collection_bloc.dart';
 import 'package:hero_dex_go/bloc/collection/collection_event.dart';
 import 'package:hero_dex_go/bloc/collection/collection_state.dart';
-import 'package:hero_dex_go/models/hero_models.dart';
+import 'package:hero_dex_go/components/hero_card.dart';
 import 'package:hero_dex_go/theme/theme_extensions.dart';
 
 class UserCollectionScreen extends StatelessWidget {
@@ -57,9 +57,7 @@ class _UserCollectionView extends StatelessWidget {
                       const SizedBox(width: 8),
                       IconButton(
                         icon: const Icon(Icons.sort),
-                        onPressed: () {
-                          // TODO: Implement sorting
-                        },
+                        onPressed: () {},
                       ),
                     ],
                   ),
@@ -96,51 +94,54 @@ class _UserCollectionView extends StatelessWidget {
       itemCount: heroes.length,
       itemBuilder: (context, index) {
         final hero = heroes[index];
-        return _buildHeroCard(context, hero);
-      },
-    );
-  }
-
-  Widget _buildHeroCard(BuildContext context, HeroModel hero) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: context.colors.containerColor,
-        border: Border.all(color: context.colors.containerColor!, width: 10),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: hero.image != null
-                  ? _buildHeroImageWidget(imageUrl: hero.image!.url)
-                  : const Center(child: Icon(Icons.person, color: Colors.grey)),
+        return Dismissible(
+          key: Key(hero.id ?? ""),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(10),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                hero.name,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeroImageWidget({required String imageUrl}) {
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const Center(child: CircularProgressIndicator());
+            child: const Icon(Icons.delete, color: Colors.white, size: 30),
+          ),
+          confirmDismiss: (direction) async {
+            return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Delete Hero?"),
+                  content: Text(
+                    "Are you sure you want to remove ${hero.name} from your collection?",
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text("CANCEL"),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text(
+                        "DELETE",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          onDismissed: (direction) {
+            if (hero.id != null) {
+              context.read<CollectionBloc>().add(
+                CollectionRemoveHero(hero.id!),
+              );
+            }
+          },
+          child: HeroCard(hero: hero),
+        );
       },
-      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
     );
   }
 }
